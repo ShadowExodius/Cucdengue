@@ -39,7 +39,9 @@ const riskBadgeStyles = {
   low: 'bg-[#d4f5f0] text-[#003d38]',
 };
 
+
 export default function InteractiveMap() {
+  console.log("¡Mapa cargado! Datos de las zonas actuales:", zones);
   const [selectedZone, setSelectedZone] = useState<Zone | null>(null);
 
   return (
