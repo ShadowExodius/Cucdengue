@@ -1,6 +1,12 @@
 import { useState, useEffect, useRef, createContext, useContext } from 'react';
 import { createPortal } from 'react-dom';
+import emailjs from '@emailjs/browser';
 import InteractiveMap from './components/InteractiveMap.tsx';
+
+// ── EmailJS config — reemplaza con tus datos de emailjs.com ──────────────────
+const EMAILJS_SERVICE_ID  = 'service_zmbn7dd';
+const EMAILJS_TEMPLATE_ID = 'template_inji1ae';
+const EMAILJS_PUBLIC_KEY  = 'keKsdOOdRKoXx1eeC';
 
 // ── Navigation ────────────────────────────────────────────────────────────────
 
@@ -197,7 +203,7 @@ function PageMapaDeRiesgo() {
             ))}
           </div>
 
-          <div style={{ position: 'relative', background: '#fff', border: '1px solid #bbcac6', borderRadius: 16, overflow: 'hidden', height: 520 }}>
+          <div style={{ background: '#fff', border: '1px solid #bbcac6', borderRadius: 16, overflow: 'hidden', height: 520 }}>
             <InteractiveMap />
           </div>
 
@@ -280,11 +286,34 @@ function PageReporteDeRiesgos() {
     return { ...base, background: '#fff', border: '1px solid #bbcac6', color: '#3c4947' };
   }
 
-  function handleEnviar() {
+  const [enviando, setEnviando] = useState(false);
+
+  async function handleEnviar() {
     if (!descripcion.trim()) { alert('⚠️ Por favor ingresa una descripción del riesgo.'); return; }
-    alert(`✅ Reporte enviado exitosamente\n\nTipo: ${tipoRiesgo}\nUrgencia: ${urgencia}\nDescripción: ${descripcion}\nCorreo: ${correo || 'No especificado'}\nUbicación: ${ubicacion || 'No especificada'}\n\nSe atenderá en menos de 2 horas.`);
-    setTipoRiesgo('Criadero de mosquitos'); setUrgencia('Media'); setDescripcion(''); setCorreo(''); setUbicacion('');
-    setTimeout(() => nav('/'), 500);
+    if (!correo.trim()) { alert('⚠️ Por favor ingresa tu correo electrónico.'); return; }
+
+    setEnviando(true);
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          tipo_riesgo: tipoRiesgo,
+          urgencia,
+          descripcion,
+          correo_reportante: correo,
+          ubicacion: ubicacion || 'No especificada',
+        },
+        EMAILJS_PUBLIC_KEY
+      );
+      alert('✅ Reporte enviado exitosamente\n\nRecibirás una confirmación en tu correo.\nSe atenderá en menos de 2 horas.');
+      setTipoRiesgo('Criadero de mosquitos'); setUrgencia('Media'); setDescripcion(''); setCorreo(''); setUbicacion('');
+      setTimeout(() => nav('/'), 500);
+    } catch {
+      alert('❌ Error al enviar el reporte. Verifica tu conexión e intenta de nuevo.');
+    } finally {
+      setEnviando(false);
+    }
   }
 
   const inputStyle: React.CSSProperties = { fontFamily: 'Open Sans,sans-serif', fontSize: 16, color: '#1b1c1c', background: '#fbf9f8', border: '1px solid #bbcac6', borderRadius: 8, width: '100%', boxSizing: 'border-box', outline: 'none' };
@@ -383,7 +412,9 @@ function PageReporteDeRiesgos() {
 
                 <div style={{ borderTop: '1px solid #bbcac6', paddingTop: 25, display: 'flex', gap: 24, justifyContent: 'flex-end', alignItems: 'center' }}>
                   <button type="button" onClick={() => { if (confirm('¿Cancelar el reporte?')) nav('/'); }} style={{ fontFamily: 'Open Sans,sans-serif', fontWeight: 600, fontSize: 16, color: '#1a60a3', background: 'none', border: 'none', cursor: 'pointer', padding: '8px 16px' }}>Cancelar</button>
-                  <button type="submit" style={{ fontFamily: 'Open Sans,sans-serif', fontWeight: 700, fontSize: 16, color: '#fff', background: '#006a60', border: 'none', borderRadius: 9999, padding: '12px 32px', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,106,96,0.3)' }}>Enviar Reporte</button>
+                  <button type="submit" disabled={enviando} style={{ fontFamily: 'Open Sans,sans-serif', fontWeight: 700, fontSize: 16, color: '#fff', background: enviando ? '#6b9e99' : '#006a60', border: 'none', borderRadius: 9999, padding: '12px 32px', cursor: enviando ? 'not-allowed' : 'pointer', boxShadow: '0 4px 12px rgba(0,106,96,0.3)', transition: 'background 0.2s' }}>
+                    {enviando ? 'Enviando...' : 'Enviar Reporte'}
+                  </button>
                 </div>
               </form>
             </div>
