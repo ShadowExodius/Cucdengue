@@ -197,7 +197,7 @@ function PageMapaDeRiesgo() {
             ))}
           </div>
 
-          <div style={{ background: '#fff', border: '1px solid #bbcac6', borderRadius: 16, overflow: 'hidden', height: 520 }}>
+          <div style={{ position: 'relative', background: '#fff', border: '1px solid #bbcac6', borderRadius: 16, overflow: 'hidden', height: 520 }}>
             <InteractiveMap />
           </div>
 
