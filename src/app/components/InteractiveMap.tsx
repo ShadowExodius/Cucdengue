@@ -69,16 +69,25 @@ export default function InteractiveMap() {
       </svg>
 
       {/* Zone markers */}
-      {zones.map((zone) => (
-        <div
-          key={zone.id}
-          className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer z-10"
-          style={{ left: `${zone.x}%`, top: `${zone.y}%` }}
-          onClick={(e) => {
-            e.stopPropagation();
-            setSelectedZone(selectedZone?.id === zone.id ? null : zone);
-          }}
-        >
+        {zones.map((zone) => (
+          <div
+            key={zone.id}
+            className="absolute cursor-pointer"
+            style={{
+              left: `${zone.x}%`,
+              top: `${zone.y}%`,
+              transform: 'translate(-50%, -50%)',
+              zIndex: 40,
+              width: '16px',
+              height: '16px',
+              backgroundColor: riskColors[zone.risk],
+              borderRadius: '50%'
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedZone(selectedZone?.id === zone.id ? null : zone);
+            }}
+          >
           {/* Pulse animation for high risk */}
           {zone.risk === 'high' && (
             <>
