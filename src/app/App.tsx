@@ -10,12 +10,15 @@ import InteractiveMap from './components/InteractiveMap.tsx';
 const EMAILJS_SERVICE_ID = 'service_zmbn7dd';
 const EMAILJS_TEMPLATE_ID = 'template_inji1ae';
 const EMAILJS_PUBLIC_KEY = 'keKsdOOdRKoXx1leeC';
+// Agarra automáticamente los datos del formulario HTML
+const formData = new FormData(e.currentTarget);
+
 const templateParams = {
-  tipo_riesgo: tipoRiesgo,       // El estado o valor de tu input de riesgo
-  urgencia: urgencia,             // El estado o valor de tu input de urgencia
-  descripcion: descripcion,       // El estado o valor de tu textarea de descripción
-  ubicacion: ubicacion,           // El estado o valor de tu input de ubicación
-  correo_reportante: correo       // El estado o valor de tu input de correo
+  tipo_riesgo: formData.get('tipo_riesgo') || formData.get('tipoRiesgo') || '',
+  urgencia: formData.get('urgencia') || '',
+  descripcion: formData.get('descripcion') || '',
+  ubicacion: formData.get('ubicacion') || '',
+  correo_reportante: formData.get('correo') || formData.get('correo_reportante') || ''
 };
 
 // 2. Se lo enviamos a EmailJS usando .send (en vez de sendForm)
