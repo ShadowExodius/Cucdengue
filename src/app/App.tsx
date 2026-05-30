@@ -5,23 +5,24 @@ import InteractiveMap from './components/InteractiveMap.tsx';
 
 // ── EmailJS config — reemplaza con tus datos de emailjs.com ──────────────────
 // 1. Recogemos los datos que escribe el usuario en la app
-// (Asegúrate de cambiar "tu_estado_..." por las variables reales que estás usando en tu formulario)
-// Pega esto justo arriba de "const templateParams = {"
-const EMAILJS_SERVICE_ID = 'service_zmbn7dd';
-const EMAILJS_TEMPLATE_ID = 'template_inji1ae';
-const EMAILJS_PUBLIC_KEY = 'keKsdOOdRKoXx1leeC';
-// Agarra automáticamente los datos del formulario HTML
-const formData = new FormData(e.currentTarget);
+import emailjs from '@emailjs/browser';
 
-const templateParams = {
-  tipo_riesgo: formData.get('tipo_riesgo') || formData.get('tipoRiesgo') || '',
-  urgencia: formData.get('urgencia') || '',
-  descripcion: formData.get('descripcion') || '',
-  ubicacion: formData.get('ubicacion') || '',
-  correo_reportante: formData.get('correo') || formData.get('correo_reportante') || ''
+const handleSubmit = (e) => {
+  e.preventDefault();
+
+  // Aquí es donde Vite inyecta las variables que configuramos en Vercel
+  const serviceID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+  const templateID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+  const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+  emailjs.sendForm(serviceID, templateID, e.target, publicKey)
+    .then((result) => {
+        alert("¡Reporte enviado con éxito!");
+    }, (error) => {
+        console.error("Error al enviar:", error);
+        alert("Hubo un error al enviar el reporte.");
+    });
 };
-// 🔴 Pon esto justo antes de emailjs.send
-console.log("ESTO LE ESTA LLEGANDO A EMAILJS:", templateParams);
 // 2. Se lo enviamos a EmailJS usando .send (en vez de sendForm)
 emailjs.send(
   EMAILJS_SERVICE_ID, 
