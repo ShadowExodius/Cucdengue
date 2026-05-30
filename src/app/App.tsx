@@ -4,9 +4,9 @@ import emailjs from '@emailjs/browser';
 import InteractiveMap from './components/InteractiveMap.tsx';
 
 // ── EmailJS config — reemplaza con tus datos de emailjs.com ──────────────────
-const EMAILJS_SERVICE_ID  = 'service_zmbn7dd';
-const EMAILJS_TEMPLATE_ID = 'template_inji1ae';
-const EMAILJS_PUBLIC_KEY  = 'keKsdOOdRKoXx1eeC';
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
 // ── Navigation ────────────────────────────────────────────────────────────────
 
