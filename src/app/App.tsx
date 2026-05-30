@@ -4,9 +4,35 @@ import emailjs from '@emailjs/browser';
 import InteractiveMap from './components/InteractiveMap.tsx';
 
 // ── EmailJS config — reemplaza con tus datos de emailjs.com ──────────────────
-const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+// 1. Recogemos los datos que escribe el usuario en la app
+// (Asegúrate de cambiar "tu_estado_..." por las variables reales que estás usando en tu formulario)
+// Pega esto justo arriba de "const templateParams = {"
+const EMAILJS_SERVICE_ID = 'service_zmbn7dd';
+const EMAILJS_TEMPLATE_ID = 'template_inji1ae';
+const EMAILJS_PUBLIC_KEY = 'keKsdOOdRKoXx1leeC';
+const templateParams = {
+  tipo_riesgo: tipoRiesgo,       // El estado o valor de tu input de riesgo
+  urgencia: urgencia,             // El estado o valor de tu input de urgencia
+  descripcion: descripcion,       // El estado o valor de tu textarea de descripción
+  ubicacion: ubicacion,           // El estado o valor de tu input de ubicación
+  correo_reportante: correo       // El estado o valor de tu input de correo
+};
+
+// 2. Se lo enviamos a EmailJS usando .send (en vez de sendForm)
+emailjs.send(
+  EMAILJS_SERVICE_ID, 
+  EMAILJS_TEMPLATE_ID, 
+  templateParams, 
+  EMAILJS_PUBLIC_KEY
+)
+.then((response) => {
+   alert("¡Reporte enviado con éxito!");
+   console.log('ÉXITO!', response.status, response.text);
+})
+.catch((err) => {
+   alert("Error al enviar el reporte. Verifica tu conexión e intenta de nuevo.");
+   console.error('ERROR:', err);
+});
 
 // ── Navigation ────────────────────────────────────────────────────────────────
 
