@@ -20,7 +20,8 @@ const templateParams = {
   ubicacion: formData.get('ubicacion') || '',
   correo_reportante: formData.get('correo') || formData.get('correo_reportante') || ''
 };
-
+// 🔴 Pon esto justo antes de emailjs.send
+console.log("ESTO LE ESTA LLEGANDO A EMAILJS:", templateParams);
 // 2. Se lo enviamos a EmailJS usando .send (en vez de sendForm)
 emailjs.send(
   EMAILJS_SERVICE_ID, 
